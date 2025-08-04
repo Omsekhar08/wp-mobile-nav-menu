@@ -1,0 +1,432 @@
+/* Base Styles */
+.wp-mnb-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999999;
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.wp-mnb-container.wp-mnb-hidden {
+    transform: translateY(100%);
+}
+
+.wp-mnb-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.wp-mnb-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    color: #666;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    flex: 1;
+    position: relative;
+}
+
+.wp-mnb-icon-wrapper {
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.wp-mnb-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.wp-mnb-custom-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.wp-mnb-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.wp-mnb-cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4444;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Animation Classes */
+.wp-mnb-container[data-animation="slide-up"] {
+    animation: slideUp 0.5s ease-out;
+}
+
+.wp-mnb-container[data-animation="fade-in"] {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Style 1 - Default Clean */
+.wp-mnb-style-1 {
+    background: #ffffff;
+    border-top: 1px solid #e1e8ed;
+}
+
+.wp-mnb-style-1 .wp-mnb-item {
+    color: #666666;
+}
+
+.wp-mnb-style-1 .wp-mnb-item:hover,
+.wp-mnb-style-1 .wp-mnb-item.active {
+    color: #007cba;
+}
+
+/* Style 2 - Dark Mode */
+.wp-mnb-style-2 {
+    background: #1a1a1a;
+    border-top: 1px solid #333;
+}
+
+.wp-mnb-style-2 .wp-mnb-item {
+    color: #cccccc;
+}
+
+.wp-mnb-style-2 .wp-mnb-item:hover,
+.wp-mnb-style-2 .wp-mnb-item.active {
+    color: #ff6b6b;
+}
+
+/* Style 3 - Rounded Elegant */
+.wp-mnb-style-3 {
+    background: #f8f9fa;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border: none;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.wp-mnb-style-3 .wp-mnb-item {
+    color: #6c757d;
+    border-radius: 15px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.wp-mnb-style-3 .wp-mnb-item:hover,
+.wp-mnb-style-3 .wp-mnb-item.active {
+    color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+/* Style 4 - Minimal Lines */
+.wp-mnb-style-4 {
+    background: #ffffff;
+    border-top: 2px solid #007cba;
+}
+
+.wp-mnb-style-4 .wp-mnb-item {
+    color: #333333;
+    position: relative;
+}
+
+.wp-mnb-style-4 .wp-mnb-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #007cba;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.wp-mnb-style-4 .wp-mnb-item:hover::after,
+.wp-mnb-style-4 .wp-mnb-item.active::after {
+    width: 80%;
+}
+
+.wp-mnb-style-4 .wp-mnb-item:hover,
+.wp-mnb-style-4 .wp-mnb-item.active {
+    color: #007cba;
+}
+
+/* Style 5 - Colorful Bubbles */
+.wp-mnb-style-5 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 5px;
+}
+
+.wp-mnb-style-5 .wp-mnb-item {
+    color: #ffffff;
+    border-radius: 25px;
+    margin: 0 2px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.wp-mnb-style-5 .wp-mnb-item:hover,
+.wp-mnb-style-5 .wp-mnb-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* Style 6 - Gradient Wave */
+.wp-mnb-style-6 {
+    background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.wp-mnb-style-6::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: wave 3s ease-in-out infinite;
+}
+
+.wp-mnb-style-6 .wp-mnb-item {
+    color: #ffffff;
+    z-index: 2;
+    position: relative;
+}
+
+.wp-mnb-style-6 .wp-mnb-item:hover,
+.wp-mnb-style-6 .wp-mnb-item.active {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
+}
+
+/* Style 7 - Elegant Glass */
+.wp-mnb-style-7 {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.wp-mnb-style-7 .wp-mnb-item {
+    color: #333;
+    border-radius: 12px;
+    margin: 3px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.wp-mnb-style-7 .wp-mnb-item:hover,
+.wp-mnb-style-7 .wp-mnb-item.active {
+    background: rgba(255, 255, 255, 0.3);
+    color: #007cba;
+}
+
+/* PRO STYLES (8-12) - Disabled in Free Version */
+.wp-mnb-style-8,
+.wp-mnb-style-9,
+.wp-mnb-style-10,
+.wp-mnb-style-11,
+.wp-mnb-style-12 {
+    position: relative;
+}
+
+.wp-mnb-style-8::after,
+.wp-mnb-style-9::after,
+.wp-mnb-style-10::after,
+.wp-mnb-style-11::after,
+.wp-mnb-style-12::after {
+    content: 'PRO';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+/* Style 8 - Neon Glow (PRO) */
+.wp-mnb-style-8 {
+    background: #000;
+    border-top: 1px solid #333;
+    filter: blur(1px);
+}
+
+/* Style 9 - 3D Depth (PRO) */
+.wp-mnb-style-9 {
+    background: linear-gradient(145deg, #f0f0f0, #cacaca);
+    filter: blur(1px);
+}
+
+/* Style 10 - Floating Islands (PRO) */
+.wp-mnb-style-10 {
+    background: transparent;
+    padding: 10px;
+    filter: blur(1px);
+}
+
+/* Style 11 - Material Design (PRO) */
+.wp-mnb-style-11 {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+    filter: blur(1px);
+}
+
+/* Style 12 - Retro Gaming (PRO) */
+.wp-mnb-style-12 {
+    background: #2c3e50;
+    border-top: 3px solid #e74c3c;
+    filter: blur(1px);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 480px) {
+    .wp-mnb-item {
+        padding: 10px 6px;
+    }
+    
+    .wp-mnb-icon {
+        font-size: 18px;
+    }
+    
+    .wp-mnb-label {
+        font-size: 9px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .wp-mnb-item {
+        padding: 8px 4px;
+    }
+    
+    .wp-mnb-icon {
+        font-size: 16px;
+    }
+    
+    .wp-mnb-label {
+        font-size: 8px;
+    }
+}
+
+/* Hide on desktop if mobile_only is enabled */
+@media screen and (min-width: 768px) {
+    .wp-mnb-container.mobile-only {
+        display: none;
+    }
+}
+
+/* Submenu Styles (PRO Feature) */
+.wp-mnb-submenu {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.wp-mnb-item:hover .wp-mnb-submenu {
+    display: block;
+}
+
+.wp-mnb-submenu-item {
+    display: block;
+    padding: 8px 12px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.wp-mnb-submenu-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Pro Notice Overlay */
+.wp-mnb-pro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999999;
+}
+
+.wp-mnb-pro-notice {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: 20px;
+}
+
+.wp-mnb-pro-notice h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.wp-mnb-pro-notice .button-primary {
+    background: #007cba;
+    border-color: #007cba;
+    margin-top: 15px;
+}

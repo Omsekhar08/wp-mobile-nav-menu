@@ -1,0 +1,24 @@
+#wp-mnb-mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+}
+.wp-mnb-icon-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 6px;
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+}
+.wp-mnb-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
