@@ -155,7 +155,7 @@
 .menu-item-content input,
 .menu-item-content select {
     flex: 1;
-    min-width: 120px;
+    /* min-width: 120px; */
 }
 
 .remove-menu-item {

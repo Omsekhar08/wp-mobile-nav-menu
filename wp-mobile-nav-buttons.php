@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: WP Mobile Nav Buttons
-Plugin URI:https://homexfashions.com/wp-mobile-nav-buttons
+Plugin URI: https://example.com/wp-mobile-nav-buttons
 Description: The ultimate WordPress plugin for creating streamlined bottom navigation menu for mobile users with advanced customization options.
 Version: 1.0.0
 Author: Om Sekhar Sura
-Author URI: https://homexfashions.com
+Author URI: https://example.com
 Text Domain: wp-mobile-nav-buttons
 Domain Path: /languages
 Requires at least: 5.0
@@ -46,6 +46,8 @@ class WP_Mobile_Nav_Buttons {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('wp_footer', array($this, 'render_mobile_menu'));
+        
+        // FIXED: Proper activation hook
         register_activation_hook(__FILE__, array($this, 'activate'));
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
     }
@@ -113,9 +115,16 @@ class WP_Mobile_Nav_Buttons {
             return;
         }
         
-        wp_enqueue_style('wp-mnb-admin', WP_MNB_PLUGIN_URL . 'assets/css/admin.css', array(), WP_MNB_VERSION);
-        wp_enqueue_script('wp-mnb-admin', WP_MNB_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'wp-color-picker'), WP_MNB_VERSION, true);
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_style('wp-mnb-admin', WP_MNB_PLUGIN_URL . 'assets/css/admin.css', array('wp-color-picker'), WP_MNB_VERSION);
+        wp_enqueue_script('wp-mnb-admin', WP_MNB_PLUGIN_URL . 'assets/js/admin.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), WP_MNB_VERSION, true);
         wp_enqueue_media();
+        
+        // FIXED: Proper AJAX localization
+        wp_localize_script('wp-mnb-admin', 'wp_mnb_ajax', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('wp_mnb_nonce'),
+        ));
     }
     
     /**
@@ -207,24 +216,24 @@ class WP_Mobile_Nav_Buttons {
                     'enabled' => true
                 ),
                 array(
-                    'icon' => 'fas fa-shopping-cart',
+                    'icon' => 'fas fa-shopping-bag',
                     'label' => 'Shop',
-                    'url' => '',
+                    'url' => class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop'),
                     'type' => 'woocommerce_shop',
+                    'enabled' => true
+                ),
+                array(
+                    'icon' => 'fas fa-shopping-cart',
+                    'label' => 'Cart',
+                    'url' => class_exists('WooCommerce') ? wc_get_cart_url() : home_url('/cart'),
+                    'type' => 'woocommerce_cart',
                     'enabled' => true
                 ),
                 array(
                     'icon' => 'fas fa-user',
                     'label' => 'Account',
-                    'url' => '',
+                    'url' => class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/my-account'),
                     'type' => 'woocommerce_account',
-                    'enabled' => true
-                ),
-                array(
-                    'icon' => 'fas fa-envelope',
-                    'label' => 'Contact',
-                    'url' => home_url('/contact'),
-                    'type' => 'custom',
                     'enabled' => true
                 ),
             )

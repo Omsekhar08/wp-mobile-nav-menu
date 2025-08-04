@@ -178,7 +178,7 @@ class WP_MNB_Settings {
                         <option value="woocommerce_cart">WooCommerce Cart</option>
                         <option value="woocommerce_account">WooCommerce Account</option>
                     </select>
-                    <input type="url" name="wp_mnb_settings[menu_items][{{index}}][url]" placeholder="URL">
+                    <input type="text" name="wp_mnb_settings[menu_items][{{index}}][url]" placeholder="URL">
                     <label><input type="checkbox" name="wp_mnb_settings[menu_items][{{index}}][enabled]" value="1" checked> Enabled</label>
                     <button type="button" class="button remove-menu-item">Remove</button>
                 </div>

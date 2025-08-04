@@ -15,16 +15,20 @@ class WP_MNB_Ajax_Handler {
     }
     
     public function save_settings() {
-        check_ajax_referer('wp_mnb_nonce', 'nonce');
+        check_ajax_referer('wp_mnb_nonce', 'wp_mnb_nonce');
         
         if (!current_user_can('manage_options')) {
             wp_send_json_error('Insufficient permissions');
         }
         
-        $settings = isset($_POST['settings']) ? $_POST['settings'] : array();
-        $sanitized_settings = $this->sanitize_settings($settings);
+        // FIXED: Get settings from $_POST properly
+        if (!isset($_POST['wp_mnb_settings'])) {
+            wp_send_json_error('No settings data received');
+        }
         
-        update_option('wp_mnb_settings', $sanitized_settings);
+        $settings = $this->sanitize_settings($_POST['wp_mnb_settings']);
+        
+        update_option('wp_mnb_settings', $settings);
         
         wp_send_json_success(array('message' => 'Settings saved successfully!'));
     }
@@ -112,12 +116,23 @@ class WP_MNB_Ajax_Handler {
         wp_send_json_success(array('preview' => $preview_html));
     }
     
+    // FIXED: Complete preview renderer
     private function render_preview($settings) {
-        $style_class = 'wp-mnb-style-' . (isset($settings['style_preset']) ? $settings['style_preset'] : 1);
+        $style_class = 'wp-mnb-style-' . (isset($settings['style_preset']) ? intval($settings['style_preset']) : 1);
         $menu_items = isset($settings['menu_items']) ? $settings['menu_items'] : array();
         
+        // If no menu items in settings, use defaults
+        if (empty($menu_items)) {
+            $menu_items = array(
+                array('label' => 'Home', 'icon' => 'fas fa-home', 'enabled' => true),
+                array('label' => 'Shop', 'icon' => 'fas fa-shopping-bag', 'enabled' => true),
+                array('label' => 'Cart', 'icon' => 'fas fa-shopping-cart', 'enabled' => true),
+                array('label' => 'Account', 'icon' => 'fas fa-user', 'enabled' => true),
+            );
+        }
+        
         ?>
-        <div class="wp-mnb-preview-container <?php echo esc_attr($style_class); ?>">
+        <div class="wp-mnb-container <?php echo esc_attr($style_class); ?>" style="position:relative; bottom:auto;">
             <nav class="wp-mnb-nav">
                 <?php foreach ($menu_items as $item): ?>
                     <?php if (isset($item['enabled']) && $item['enabled']): ?>
@@ -138,33 +153,40 @@ class WP_MNB_Ajax_Handler {
         <?php
     }
     
+    // FIXED: Complete sanitization
     private function sanitize_settings($settings) {
-        // Add sanitization logic here
-        // This is a simplified version - you should expand this based on your needs
         $sanitized = array();
         
-        if (isset($settings['enabled'])) {
-            $sanitized['enabled'] = (bool) $settings['enabled'];
+        $sanitized['enabled'] = isset($settings['enabled']);
+        $sanitized['mobile_only'] = isset($settings['mobile_only']);
+        $sanitized['style_preset'] = isset($settings['style_preset']) ? intval($settings['style_preset']) : 1;
+        $sanitized['bg_color'] = isset($settings['bg_color']) ? sanitize_hex_color($settings['bg_color']) : '#ffffff';
+        $sanitized['text_color'] = isset($settings['text_color']) ? sanitize_hex_color($settings['text_color']) : '#666666';
+        $sanitized['active_color'] = isset($settings['active_color']) ? sanitize_hex_color($settings['active_color']) : '#007cba';
+        $sanitized['border_radius'] = isset($settings['border_radius']) ? intval($settings['border_radius']) : 0;
+        $sanitized['enable_shadow'] = isset($settings['enable_shadow']);
+        $sanitized['animation'] = isset($settings['animation']) ? sanitize_text_field($settings['animation']) : 'none';
+        $sanitized['custom_css'] = isset($settings['custom_css']) ? wp_strip_all_tags($settings['custom_css']) : '';
+        
+        // Sanitize menu items
+        if (isset($settings['menu_items']) && is_array($settings['menu_items'])) {
+            $sanitized['menu_items'] = array();
+            foreach ($settings['menu_items'] as $item) {
+                if (!is_array($item)) continue;
+                
+                $sanitized['menu_items'][] = array(
+                    'label' => isset($item['label']) ? sanitize_text_field($item['label']) : '',
+                    'icon' => isset($item['icon']) ? sanitize_text_field($item['icon']) : '',
+                    'type' => isset($item['type']) ? sanitize_text_field($item['type']) : 'custom',
+                    'url' => isset($item['url']) ? esc_url_raw($item['url']) : '',
+                    'enabled' => isset($item['enabled'])
+                );
+            }
         }
         
-        if (isset($settings['mobile_only'])) {
-            $sanitized['mobile_only'] = (bool) $settings['mobile_only'];
-        }
-        
-        if (isset($settings['style_preset'])) {
-            $sanitized['style_preset'] = intval($settings['style_preset']);
-        }
-        
-        if (isset($settings['bg_color'])) {
-            $sanitized['bg_color'] = sanitize_hex_color($settings['bg_color']);
-        }
-        
-        if (isset($settings['text_color'])) {
-            $sanitized['text_color'] = sanitize_hex_color($settings['text_color']);
-        }
-        
-        if (isset($settings['active_color'])) {
-            $sanitized['active_color'] = sanitize_hex_color($settings['active_color']);
+        // Sanitize hidden pages
+        if (isset($settings['hidden_pages']) && is_array($settings['hidden_pages'])) {
+            $sanitized['hidden_pages'] = array_map('intval', $settings['hidden_pages']);
         }
         
         return $sanitized;

@@ -57,7 +57,7 @@
         $(document).on('change', '.menu-item-type', function() {
             const $row = $(this).closest('.menu-item-row');
             const type = $(this).val();
-            const $urlField = $row.find('input[type="url"]');
+            const $urlField = $row.find('input[type="text"]');
             
             if (type.startsWith('woocommerce_')) {
                 $urlField.hide();
@@ -290,58 +290,65 @@
         $('#menu-items-list').append($row);
     }
 
-    function initFormHandling() {
-        // Save settings
-        $('#wp-mnb-save-settings').on('click', function(e) {
-            e.preventDefault();
-            
-            const $button = $(this);
-            const originalText = $button.val();
-            
-            $button.val('Saving...').prop('disabled', true);
-            
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: $('#wp-mnb-settings-form').serialize() + '&action=wp_mnb_save_settings',
-                success: function(response) {
-                    if (response.success) {
-                        showMessage(response.data.message, 'success');
-                    } else {
-                        showMessage('Failed to save settings!', 'error');
+        function initFormHandling() {
+            // Save settings - FIXED
+            $('#wp-mnb-save-settings').on('click', function(e) {
+                e.preventDefault();
+                
+                const $button = $(this);
+                const originalText = $button.val();
+                
+                $button.val('Saving...').prop('disabled', true);
+                
+                // Get form data properly
+                const formData = $('#wp-mnb-settings-form').serialize();
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: formData + '&action=wp_mnb_save_settings',
+                    success: function(response) {
+                        if (response.success) {
+                            showMessage(response.data.message, 'success');
+                            updateLivePreview(); // Refresh preview
+                        } else {
+                            showMessage('Failed to save settings!', 'error');
+                        }
+                    },
+                    error: function() {
+                        showMessage('AJAX error occurred!', 'error');
+                    },
+                    complete: function() {
+                        $button.val(originalText).prop('disabled', false);
                     }
-                },
-                complete: function() {
-                    $button.val(originalText).prop('disabled', false);
-                }
+                });
             });
-        });
 
-        // Reset settings
-        $('#wp-mnb-reset-settings').on('click', function(e) {
-            e.preventDefault();
-            
-            if (!confirm('Are you sure you want to reset all settings to default?')) {
-                return;
-            }
-            
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'wp_mnb_reset_settings',
-                    nonce: wp_mnb_ajax.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        location.reload();
-                    } else {
-                        showMessage('Failed to reset settings!', 'error');
-                    }
+            // Reset settings - FIXED
+            $('#wp-mnb-reset-settings').on('click', function(e) {
+                e.preventDefault();
+                
+                if (!confirm('Are you sure you want to reset all settings to default?')) {
+                    return;
                 }
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'wp_mnb_reset_settings',
+                        nonce: wp_mnb_ajax.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            showMessage('Failed to reset settings!', 'error');
+                        }
+                    }
+                });
             });
-        });
-    }
+        }
 
     function initSliders() {
         $('.slider').on('input', function() {
